@@ -1,10 +1,21 @@
-
-
+body {
+    font-size: 30;
+}
+.main {
+    border: 1px solid black;
+    height: 500px;
+    width: 800px;
+}
 ul li {
     list-style: none;
 }
 .nested {
     display: none;
+}
+
+.marked {
+    color:aliceblue;
+    background-color: rgb(14, 77, 185);
 }
 .caret:before {
     content: "\25B6";

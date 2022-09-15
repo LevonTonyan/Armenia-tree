@@ -1,6 +1,7 @@
 
 let button = document.getElementById("btn");
 let input = document.getElementById("input");
+
 button.addEventListener('click', ()=> {findAndRemove(input.value, makeRoot(arr))});
 
 let arr = [{
@@ -57,32 +58,67 @@ let arr = [{
     parentId: 8
   }];
 
+//Marking function
+function mark(text, search){
+  let re = new RegExp(search, "gi")
+  let start = text.search(re);
+  let endIndex = start + search.length
+  return text.slice(0,start) + `<span class="marked">${text.slice(start,endIndex)}</span>` + text.slice(endIndex)
+}
+
+
 //SEARCHING FUNCTION /////////////////
   function findAndRemove(text,data) {
     document.getElementById("container").innerHTML = "";
+
   //Recursion search/////////////////////////////
+    let serachingReg = new RegExp(text, "gi")
+    
     function rec(data){
       return data.map((el) => {
         if(el.name.includes(text)){
-          return {...el, children:[], flag:true}
+
+          return {...el, children:[], flag:true, name: mark(el.name,text)}
         } else if(!el.children.length && !el.name.includes(text)){
           return {...el, children:[], flag:false}
         }else {
           return {...el, children:rec(el.children), flag:rec(el.children).filter(t => t.flag).length?true:false}
         }
       })}
-        
 
-  function render1(data, id="container"){
-    if(data.flag){
-      document.getElementById(id).appendChild(genLi(data));
-    document.getElementById(id).appendChild(genUl());
-    data.children.forEach(ch => {
-      render1(ch, ch.parentId);
-    });
-    }
+
+
+function genLi(content){
+  let el =  document.createElement("li");
+  el.id = content.name
+  el.innerHTML = content.name;
+  return el;
 }
-  render1(rec(data)[0]);
+
+function genUl(id){
+  let ul =  document.createElement("ul");
+  ul.id = id
+  return ul;
+}
+
+
+      function render1(data, id="container"){
+        data.forEach(ch => {
+          if(ch.flag){
+            document.getElementById(id).appendChild(genLi(ch))
+            document.getElementById(ch.name).appendChild(genUl(ch.id))
+            if(ch.children.length){
+              render1(ch.children, ch.id)
+            }
+          }
+        });
+    }
+
+console.log(rec(data))
+render1(rec(data))
+
+
+ 
 }
 
 
@@ -113,14 +149,13 @@ function genArrow(cont){
 
 function genLi(content){
     let el =  document.createElement("li");
-
     el.id = content.name
     el.innerHTML = `<span class='caret'>${content.name}</span>`;
     return el;
 }
 
+
 function render(data, id="container"){
-  
     data.forEach(ch => {
     document.getElementById(id).appendChild(genLi(ch))
     document.getElementById(ch.name).appendChild(genUl(ch.id))
@@ -133,15 +168,12 @@ function render(data, id="container"){
 
 
 render(makeRoot(arr));
+
 let toggler = document.getElementsByClassName("caret");
 for(let i = 0; i< toggler.length; i++){
   toggler[i].addEventListener('click', function (){
-    console.log("click")
-  
     this.parentElement.querySelector(".nested").classList.toggle("active");
     this.classList.toggle("caret-down");
-    
-    
   });
 } 
 
