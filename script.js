@@ -1,8 +1,7 @@
+
 let button = document.getElementById("btn");
 let input = document.getElementById("input");
 button.addEventListener('click', ()=> {findAndRemove(input.value, makeRoot(arr))});
-
-
 
 let arr = [{
     id: 0,
@@ -61,69 +60,88 @@ let arr = [{
 //SEARCHING FUNCTION /////////////////
   function findAndRemove(text,data) {
     document.getElementById("container").innerHTML = "";
+  //Recursion search/////////////////////////////
+    function rec(data){
+      return data.map((el) => {
+        if(el.name.includes(text)){
+          return {...el, children:[], flag:true}
+        } else if(!el.children.length && !el.name.includes(text)){
+          return {...el, children:[], flag:false}
+        }else {
+          return {...el, children:rec(el.children), flag:rec(el.children).filter(t => t.flag).length?true:false}
+        }
+      })}
+        
 
-
-
-    function rec1(li,id = "container"){
-
-      if (!li.name.includes(text) && li.children){
-        document.getElementById(id).appendChild(genLi(li));
-
-        li.children.forEach(ch => {
-          rec1(ch, ch.parentId);
-        });
-      } 
-      
-      
-    
-  }
-rec1(data);
-}
-
-
-
-function makeRoot(arr){
-let root;
-arr.forEach((el) => {
-    if(el.parentId === null){
-        root = el;
-        return;
+  function render1(data, id="container"){
+    if(data.flag){
+      document.getElementById(id).appendChild(genLi(data));
+    document.getElementById(id).appendChild(genUl());
+    data.children.forEach(ch => {
+      render1(ch, ch.parentId);
+    });
     }
-    const parentEl = arr[el.parentId];
-    parentEl.children = [...(parentEl.children || []), el];
-
-});
-return root;
+}
+  render1(rec(data)[0]);
 }
 
 
-function genUl(){
-  let el =  document.createElement("ul");
-  return el;
+/////Transform flat array into nested Obj
+function makeRoot(items){
+  const arm = (items,id = null)=>
+items.filter(item => item.parentId === id)
+.map(i => ({...i,children:arm(arr,i.id)}));
+return arm(items);
+}
+
+
+
+
+
+function genUl(id){
+  let ul =  document.createElement("ul");
+  ul.classList.add("nested")
+  ul.id = id
+  return ul;
+}
+function genArrow(cont){
+  let arrow = document.createElement("span");
+  arrow.className = "caret";
+  arrow.innerHTML = cont.name;
+  return arrow;
 }
 
 function genLi(content){
     let el =  document.createElement("li");
-    el.classList.add(content.name);
-    el.id = content.id;
-    el.innerHTML = content.name;
+
+    el.id = content.name
+    el.innerHTML = `<span class='caret'>${content.name}</span>`;
     return el;
 }
 
-function rec(data, id="container"){
-    if(data.children){
-      
-        document.getElementById(id).appendChild(genLi(data));
-        data.children.forEach(child => {
-            rec(child, child.parentId);
-        });
-    }else {
-        document.getElementById(id).appendChild(genLi(data));
+function render(data, id="container"){
+  
+    data.forEach(ch => {
+    document.getElementById(id).appendChild(genLi(ch))
+    document.getElementById(ch.name).appendChild(genUl(ch.id))
+    if(ch.children.length){
+      render(ch.children, ch.id)
     }
+    });
+}
 
-}
-function render(data){
-  return rec(makeRoot(data));
-}
-render(arr);
+
+
+render(makeRoot(arr));
+let toggler = document.getElementsByClassName("caret");
+for(let i = 0; i< toggler.length; i++){
+  toggler[i].addEventListener('click', function (){
+    console.log("click")
+  
+    this.parentElement.querySelector(".nested").classList.toggle("active");
+    this.classList.toggle("caret-down");
+    
+    
+  });
+} 
 

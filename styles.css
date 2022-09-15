@@ -1,11 +1,27 @@
-ul {
-   margin:15px;
-  
 
+
+ul li {
+    list-style: none;
+}
+.nested {
+    display: none;
+}
+.caret:before {
+    content: "\25B6";
+    margin-right: 5px;
+    display: inline-block;
+}
+.active {
+    display: block;
+}
+.caret {
+    cursor: pointer;
+    user-select: none;
 }
 
-li {
-    margin-left: 20px;
+.caret-down:before {
+    transform: rotate(90deg)
+
 }
 
 
