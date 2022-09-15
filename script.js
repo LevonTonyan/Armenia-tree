@@ -1,8 +1,14 @@
 
-let button = document.getElementById("btn");
+let searchButton = document.getElementById("search");
 let input = document.getElementById("input");
+let results = document.getElementById('results');
 
-button.addEventListener('click', ()=> {findAndRemove(input.value, makeRoot(arr))});
+
+
+
+
+
+searchButton.addEventListener('click', ()=> {findAndRemove(input.value, makeRoot(arr))});
 
 let arr = [{
     id: 0,
@@ -69,15 +75,20 @@ function mark(text, search){
 
 //SEARCHING FUNCTION /////////////////
   function findAndRemove(text,data) {
+    if(!text){
+      return 
+    }
     document.getElementById("container").innerHTML = "";
+    results.innerHTML = 0;
 
   //Recursion search/////////////////////////////
     let serachingReg = new RegExp(text, "gi")
+    let counter = new Set()
     
     function rec(data){
       return data.map((el) => {
         if(el.name.includes(text)){
-
+          counter.add(el)
           return {...el, children:[], flag:true, name: mark(el.name,text)}
         } else if(!el.children.length && !el.name.includes(text)){
           return {...el, children:[], flag:false}
@@ -114,9 +125,8 @@ function genUl(id){
         });
     }
 
-console.log(rec(data))
 render1(rec(data))
-
+results.innerHTML = counter.size?counter.size:"No matches found!"
 
  
 }
@@ -150,7 +160,7 @@ function genArrow(cont){
 function genLi(content){
     let el =  document.createElement("li");
     el.id = content.name
-    el.innerHTML = `<span class='caret'>${content.name}</span>`;
+    el.innerHTML = content.children.length?`<span class='caret'>${content.name}</span>`:content.name
     return el;
 }
 
@@ -176,4 +186,6 @@ for(let i = 0; i< toggler.length; i++){
     this.classList.toggle("caret-down");
   });
 } 
+
+
 

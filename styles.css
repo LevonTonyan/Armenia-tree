@@ -1,10 +1,9 @@
-body {
-    font-size: 30;
-}
+
 .main {
     border: 1px solid black;
     height: 500px;
-    width: 800px;
+    width: 99%;
+    display: flex;
 }
 ul li {
     list-style: none;
@@ -18,7 +17,7 @@ ul li {
     background-color: rgb(14, 77, 185);
 }
 .caret:before {
-    content: "\25B6";
+    content: "+";
     margin-right: 5px;
     display: inline-block;
 }
@@ -31,12 +30,24 @@ ul li {
 }
 
 .caret-down:before {
-    transform: rotate(90deg)
+    content: "-"
 
 }
 
 
 .left, .right {
     display: inline-block;
+    width: 45%;
+}
+
+.statistics label {
+    display: block;
+    margin: 20px;
+}
+
+.right {
+    margin-top: 200px;
+    margin:auto;
+    text-align: center;
 }
 
