@@ -8,6 +8,7 @@ let results = document.getElementById('results');
 
 
 
+
 searchButton.addEventListener('click', ()=> {findAndRemove(input.value, makeRoot(arr))});
 
 let arr = [{
@@ -76,39 +77,39 @@ function mark(text, search){
 //SEARCHING FUNCTION /////////////////
   function findAndRemove(text,data) {
     if(!text){
-      return 
+      return;
     }
     document.getElementById("container").innerHTML = "";
     results.innerHTML = 0;
 
   //Recursion search/////////////////////////////
-    let serachingReg = new RegExp(text, "gi")
-    let counter = new Set()
+    let serachingReg = new RegExp(text, "gi");
+    let counter = new Set();
     
     function rec(data){
       return data.map((el) => {
         if(el.name.includes(text)){
-          counter.add(el)
-          return {...el, children:[], flag:true, name: mark(el.name,text)}
+          counter.add(el);
+          return {...el, children:[], flag:true, name: mark(el.name,text)};
         } else if(!el.children.length && !el.name.includes(text)){
-          return {...el, children:[], flag:false}
+          return {...el, children:[], flag:false};
         }else {
-          return {...el, children:rec(el.children), flag:rec(el.children).filter(t => t.flag).length?true:false}
+          return {...el, children:rec(el.children), flag:rec(el.children).filter(t => t.flag).length?true:false};
         }
-      })}
+      });}
 
 
 
 function genLi(content){
   let el =  document.createElement("li");
-  el.id = content.name
+  el.id = content.name;
   el.innerHTML = content.name;
   return el;
 }
 
 function genUl(id){
   let ul =  document.createElement("ul");
-  ul.id = id
+  ul.id = id;
   return ul;
 }
 
@@ -116,17 +117,17 @@ function genUl(id){
       function render1(data, id="container"){
         data.forEach(ch => {
           if(ch.flag){
-            document.getElementById(id).appendChild(genLi(ch))
-            document.getElementById(ch.name).appendChild(genUl(ch.id))
+            document.getElementById(id).appendChild(genLi(ch));
+            document.getElementById(ch.name).appendChild(genUl(ch.id));
             if(ch.children.length){
-              render1(ch.children, ch.id)
+              render1(ch.children, ch.id);
             }
           }
         });
     }
 
-render1(rec(data))
-results.innerHTML = counter.size?counter.size:"No matches found!"
+render1(rec(data));
+results.innerHTML = counter.size?counter.size:"No matches found!";
 
  
 }
