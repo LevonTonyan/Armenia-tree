@@ -4,11 +4,6 @@ let input = document.getElementById("input");
 let results = document.getElementById('results');
 
 
-
-
-
-
-
 searchButton.addEventListener('click', ()=> {findAndRemove(input.value, makeRoot(arr))});
 
 let arr = [{
@@ -67,9 +62,9 @@ let arr = [{
 
 //Marking function
 function mark(text, search){
-  let re = new RegExp(search, "gi")
+  let re = new RegExp(search, "gi");
   let start = text.search(re);
-  let endIndex = start + search.length
+  let endIndex = start + search.length;
   return text.slice(0,start) + `<span class="marked">${text.slice(start,endIndex)}</span>` + text.slice(endIndex)
 }
 
@@ -83,12 +78,11 @@ function mark(text, search){
     results.innerHTML = 0;
 
   //Recursion search/////////////////////////////
-    let serachingReg = new RegExp(text, "gi");
     let counter = new Set();
     
     function rec(data){
       return data.map((el) => {
-        if(el.name.includes(text)){
+        if(el.name.toLowerCase().includes(text)||(el.name.includes(text))){
           counter.add(el);
           return {...el, children:[], flag:true, name: mark(el.name,text)};
         } else if(!el.children.length && !el.name.includes(text)){
